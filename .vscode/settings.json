@@ -1,0 +1,17 @@
+{
+  "cssvar.files": [
+    "./apps/work/lib/styles/root.scss",
+    "./apps/work/lib/styles/theme-light.root.scss",
+    "./apps/work/lib/styles/theme-dark.root.scss",
+  ],
+  "cssvar.themes": ["theme--dark", "theme--light"],
+  "html-css-class-completion.includeGlobPattern": "apps/work/src/lib/styles/global.css",
+  "sass.andStared": [
+    "active",
+    "focus",
+    "hover",
+    "nth-child"
+  ],
+  "sass.format.convert": false,
+  "sass.disableUnitCompletion": false
+}

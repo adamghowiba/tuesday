@@ -1,1 +1,4 @@
-export * from './lib/ui';
+export {
+  default as Button,
+  ButtonProps,
+} from './lib/componenets/button/Button';
