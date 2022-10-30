@@ -1,16 +1,15 @@
-import React, { FC, ReactNode, useEffect, useRef } from 'react';
 import { Icon, IconifyIcon } from '@iconify/react';
-import alert16Regular from '@iconify/icons-fluent/alert-16-regular';
-import alert12Regular from '@iconify/icons-fluent/alert-12-regular';
-import WorkMangementIcon from '../icons/WorkMangementIcon';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { FC, MouseEventHandler, ReactElement, useRef } from 'react';
 import Divider from '../global/Divider';
-import { ReactElement } from 'react';
-import NotifcationIcon from '../icons/NotifcationsIcon';
-import InboxIcon from '../icons/InboxIcon';
-import WorkIcon from '../icons/WorkIcon';
+import Action from '../global/IconAction';
+import ToolTip from '../global/tooltip/Tooltip';
 import FavoritesIcon from '../icons/FavoritesIcon';
-import { createPopper } from '@popperjs/core';
-import ToolTip from '../global/Tooltip';
+import InboxIcon from '../icons/InboxIcon';
+import NotifcationIcon from '../icons/NotifcationsIcon';
+import WorkIcon from '../icons/WorkIcon';
+import WorkMangementIcon from '../icons/WorkMangementIcon';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface SidebarProps {}
@@ -19,16 +18,38 @@ const Sidebar: FC<SidebarProps> = (props) => {
   return (
     <>
       <div className="sidebar">
-        <img src="/images/tuesday_logo.png" className="sidebar__logo"></img>
+        <div className="sidebar__logo">
+          <Image
+            src="/images/tuesday_logo.png"
+            className="sidebar__logo"
+            alt="Tuesday Logo"
+            width={40}
+            height={40}
+          />
+        </div>
 
         <Divider margin="5px 0px 15px 0px" />
 
         <div className="top-navigation">
-          <WorkMangementIcon />
-          <IconAction icon={<NotifcationIcon />} />
-          <IconAction icon={<InboxIcon />} />
-          <IconAction icon={<WorkIcon />} />
-          <IconAction icon={<FavoritesIcon />} />
+          <ToolTip placement="right" content="Work Mangement">
+            <Action icon={<WorkMangementIcon />} href="/boards/1" />
+          </ToolTip>
+
+          <ToolTip placement="right" content="Notifcations">
+            <Action icon={<NotifcationIcon />} />
+          </ToolTip>
+
+          <ToolTip placement="right" content="Inbox">
+            <Action icon={<InboxIcon />} />
+          </ToolTip>
+
+          <ToolTip placement="right" content="My Work">
+            <Action icon={<WorkIcon />} />
+          </ToolTip>
+
+          <ToolTip placement="right" content="Favorites">
+            <Action icon={<FavoritesIcon />} />
+          </ToolTip>
         </div>
       </div>
 
@@ -36,13 +57,16 @@ const Sidebar: FC<SidebarProps> = (props) => {
         .sidebar {
           flex-direction: column;
           height: 100%;
+          align-items: center;
           background-color: var(--color-surface);
           color: var(--text-color-on-primary);
           padding: var(--space-small);
 
           &__logo {
-            max-width: 48px;
             width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
         }
 
@@ -59,42 +83,5 @@ const Sidebar: FC<SidebarProps> = (props) => {
 };
 
 Sidebar.defaultProps = {};
-
-export interface IconAction {
-  icon: ReactElement | IconifyIcon;
-  size?: number;
-}
-const IconAction: FC<IconAction> = ({ icon, size = 22 }) => {
-  const actionRef = useRef<HTMLDivElement>(null);
-  const toolTipRef = useRef<HTMLDivElement>(null);
-
-  return (
-    <>
-      <div className="action" ref={actionRef}>
-        {React.isValidElement(icon) ? (
-          icon
-        ) : (
-          <Icon icon={icon} width={size} height={size} />
-        )}
-      </div>
-
-      <style jsx>
-        {`
-          .action {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--border-radius-medium);
-            padding: var(--space-small);
-
-            &:hover {
-              background-color: var(--color-black);
-            }
-          }
-        `}
-      </style>
-    </>
-  );
-};
 
 export default Sidebar;

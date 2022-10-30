@@ -25,7 +25,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "work:build",
-        "dev": true
+        "dev": true,
+        "proxyConfig": "apps/work/proxy.conf.json"
       },
       "configurations": {
         "development": {

@@ -13,6 +13,7 @@ const Divider: FC<DividerProps> = ({ margin = 0 }) => {
       <style jsx>{`
         hr {
           border: none;
+          width: 100%;
           border-top: 1px solid var(--color-asphalt);
           margin: ${parseUnit(margin)};
           padding: 0;

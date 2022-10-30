@@ -17,15 +17,14 @@ const BaseLayout: FC<PropsWithChildren<BaseLayoutProps>> = (props) => {
 
       <style jsx>{`
         .layout {
-          width: 100%;
           height: 100%;
+          width: 100%;
           display: grid;
           grid-template-columns: auto 1fr;
         }
 
         main {
           height: 100%;
-          width: 100%;
         }
       `}</style>
     </>
