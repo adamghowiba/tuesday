@@ -91,9 +91,6 @@ const BoardTableT: FC<BoardTableTProps> = ({
         <table className="board">
           {/* HEADER */}
           <thead className="columns">
-            {/* <div className="cell cell--checkbox">
-            <input type="checkbox" />
-          </div> */}
             <tr className="tr-header">
               {columns.map((column, i) => (
                 <td

@@ -1,15 +1,19 @@
 import React, { FC, PropsWithChildren } from 'react';
 import { Theme } from '../types/theme';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface RootLayoutProps {}
 
 const RootLayout: FC<PropsWithChildren<RootLayoutProps>> = (props) => {
   const theme: Theme = 'light';
+  const queryClient = new QueryClient();
 
   return (
     <>
-      <div className={`root theme--${theme}`}>{props.children}</div>
+      <QueryClientProvider client={queryClient}>
+        <div className={`root theme--${theme}`}>{props.children}</div>
+      </QueryClientProvider>
 
       <style jsx>{`
         .root {

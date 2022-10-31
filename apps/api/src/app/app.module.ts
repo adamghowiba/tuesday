@@ -9,12 +9,14 @@ import { HttpExecptionFilter } from '../common/filters/http-execption.filter';
 import { NotFoundFilter } from '../common/filters/not-found.filter';
 import { PrismaValidationFilter } from '../common/filters/prisma-validation.filter';
 import { BoardsModule } from '../modules/boards/boards.module';
+import { ColumnsModule } from '../modules/columns/columns.module';
+import { ItemsModule } from '../modules/items/items.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
-  imports: [BoardsModule],
+  imports: [BoardsModule, ItemsModule, ColumnsModule],
   controllers: [AppController],
   providers: [
     AppService,
