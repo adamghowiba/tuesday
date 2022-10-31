@@ -11,21 +11,48 @@ datasource db {
 }
 
 model Board {
-  id             Int      @id @default(autoincrement())
-  name           String
-  is_favorite    Boolean?
-  items          Item[]
-  activatedViews String[]
-}
-
-model View {
-  id Int @id
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  is_favorite Boolean?
+  items       Item[]
+  columns     Column[]
+  created_at  DateTime @default(now())
 }
 
 model Item {
-  id      Int    @id
-  name    String
+  id            Int      @id @default(autoincrement())
+  name          String
   column_values Json
-  board    Board? @relation(fields: [board_id], references: [id])
-  board_id Int?
+  board         Board?   @relation(fields: [board_id], references: [id])
+  board_id      Int?
+  created_at    DateTime @default(now())
+}
+
+enum ColumnType {
+  AUTO_NUMBER
+  CHECKBOX
+  LONG_TEXT
+  TEXT
+  STATUS
+}
+
+model Column {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String?
+  type        ColumnType
+  created_at  DateTime   @default(now())
+  board       Board?     @relation(fields: [board_id], references: [id])
+  board_id     Int?
+}
+
+model Group {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+// UNIMPLEMENTED
+model View {
+  id Int @id
 }

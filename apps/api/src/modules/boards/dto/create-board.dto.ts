@@ -10,11 +10,11 @@ export class CreateBoardDto implements OmitCreateDtoFields<Board> {
 
   @IsBoolean()
   @IsOptional()
-  @ApiPropertyOptional()
-  is_favorite!: boolean;
+  @ApiPropertyOptional({type: Boolean})
+  is_favorite!: boolean | null;
 
-  @IsString({each: true})
+  @IsString()
   @IsOptional()
-  @ApiProperty()
-  activatedViews!: string[];
+  @ApiPropertyOptional({type: String})
+  description!: string | null;
 }

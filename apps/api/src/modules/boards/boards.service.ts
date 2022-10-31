@@ -22,6 +22,7 @@ export class BoardsService {
   async findOne(boardId: number) {
     const board = await this.prisma.board.findUniqueOrThrow({
       where: { id: boardId },
+      include: { columns: true, items: true },
     });
 
     return board;
@@ -37,7 +38,9 @@ export class BoardsService {
   }
 
   async remove(boardId: number) {
-    const deletedBoard = await this.prisma.board.delete({where: {id: boardId}});
+    const deletedBoard = await this.prisma.board.delete({
+      where: { id: boardId },
+    });
 
     return deletedBoard;
   }

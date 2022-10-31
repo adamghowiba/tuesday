@@ -1,62 +1,41 @@
-import { Button } from '@tuesday/ui';
-import FavoritesIcon from '../../lib/componenets/icons/FavoritesIcon';
+import { useRouter } from 'next/router';
+import { Suspense, useEffect } from 'react';
+import { useQuery } from 'react-query';
+import { request } from '../../lib/api/api';
 import BoardHeader from '../../lib/views/board/BoardHeader';
-import React, { useState, useEffect, useMemo } from 'react';
-import BoardTableT, {
-  BoardColumn,
-} from '../../lib/componenets/tabel/BoardTableT';
-import BoardHeaderSettings from 'apps/work/lib/views/board/BoardHeader-Settings';
-import { MOCK_BOARD } from 'apps/work/lib/mock/board.mock';
+import BoardHeaderSettings from '../../lib/views/board/BoardHeader-Settings';
 
-// const ROWS = [
-//   {
-//     item: 'Add dawdad awdaw awd awdaw daw d ns',
-//     status: 'active',
-//     person: 'Adam',
-//     date: '10/20',
-//   },
-//   { item: 'Add buttons', status: 'active', date: '10/20', person: 'Adam' },
-// ];
+const useFetchBoard = (params: { boardId: number }) => {
+  const boardQuery = useQuery(
+    ['boards', params.boardId],
+    async () => {
+      const response = await request.get(`/boards/${params.boardId}`);
+
+      return response.data;
+    },
+    { enabled: !!params.boardId }
+  );
+
+  return boardQuery;
+};
 
 const Boards = () => {
-  const BOARD_COLUMNS: BoardColumn[] = useMemo(
-    () => [{ headerName: 'Item', key: 'item', width: 150, sticky: true }],
-    []
-  );
-  const [columns, setColumns] = useState<BoardColumn[]>(BOARD_COLUMNS);
+  const { boardId } = useRouter().query;
+  const boardQuery = useFetchBoard({ boardId: +boardId });
 
-    const fetchColumns = () => {
-      const columns = MOCK_BOARD.columns;
-    }
 
-  useEffect(() => {
-    setColumns(BOARD_COLUMNS);
-  }, [BOARD_COLUMNS]);
-
-  const handleAddColumn = () => {
-    setColumns([
-      ...columns,
-      {
-        key: `${Math.floor(Math.random() * 1000)}`,
-        headerName: 'Wild',
-        width: 140,
-      },
-    ]);
-  };
+  /* Temp Loading State */
+  if (boardQuery.isLoading) return <h2>Loading...</h2>;
 
   return (
     <>
       <div className="board-container">
         <div className="board-header">
-          <BoardHeader title="Web Revived Back Office" />
+          <BoardHeader title={boardQuery.data.name} />
           <BoardHeaderSettings />
         </div>
 
-        <BoardTableT
-          columns={columns}
-          rows={ROWS}
-          onClickAdd={handleAddColumn}
-        />
+        {/* <BoardTableT columns={boardQuery.data.columns} rows={boardQuery.data.row} /> */}
       </div>
 
       <style jsx>{`
