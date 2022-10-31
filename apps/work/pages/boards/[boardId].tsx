@@ -20,12 +20,13 @@ const useFetchBoard = (params: { boardId: number }) => {
 };
 
 const Boards = () => {
-  const { boardId } = useRouter().query;
-  const boardQuery = useFetchBoard({ boardId: +boardId });
-
+  const { query } = useRouter();
+  const boardQuery = useFetchBoard({
+    boardId: +query.boardId
+  });
 
   /* Temp Loading State */
-  if (boardQuery.isLoading) return <h2>Loading...</h2>;
+  if (boardQuery.isFetching) return <h2>Loading...</h2>;
 
   return (
     <>
