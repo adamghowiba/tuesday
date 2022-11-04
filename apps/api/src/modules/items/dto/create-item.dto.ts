@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Item, Prisma } from "@prisma/client";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Item } from "@prisma/client";
 import { IsNumber, IsObject, IsString } from "class-validator";
 import { OmitCreateDtoFields } from "../../../types/helpers.type";
 
@@ -8,9 +8,9 @@ export class CreateItemDto implements OmitCreateDtoFields<Item> {
   @ApiProperty()
   name!: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsObject()
-  column_values!: any;
+  column_values: any = {};
 
   @IsNumber()
   @ApiProperty()

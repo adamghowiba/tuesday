@@ -17,7 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@tuesday/assets": ["libs/assets/src/index.ts"],
-      "@tuesday/rui": ["libs/rui/src/index.ts"],
+      "@tuesday/data-access": ["libs/data-access/src/index.ts"],
+      "@tuesday/types": ["libs/types/src/index.ts"],
       "@tuesday/ui": ["libs/ui/src/index.ts"],
       "@tuesday/utils": ["libs/utils/src/index.ts"]
     }

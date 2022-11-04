@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { TuesdayApi } from '@tuesday/data-access';
 
 const request = axios.create({
   baseURL: 'http://localhost:5000/v1',
@@ -8,4 +9,6 @@ const request = axios.create({
   responseType: 'json',
 });
 
-export { request };
+const api = new TuesdayApi({ host: 'http://localhost:5000' });
+
+export { request, api };

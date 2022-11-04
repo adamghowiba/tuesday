@@ -4,6 +4,8 @@
   "projects": {
     "api": "apps/api",
     "assets": "libs/assets",
+    "data-access": "libs/data-access",
+    "types": "libs/types",
     "ui": "libs/ui",
     "utils": "libs/utils",
     "work": "apps/work"

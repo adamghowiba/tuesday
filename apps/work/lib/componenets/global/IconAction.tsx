@@ -9,7 +9,7 @@ export interface ActionProps {
   onClick?: MouseEventHandler;
 }
 
-const Action: FC<ActionProps> = ({ icon, size = 22, ...props }) => {
+const IconAction: FC<ActionProps> = ({ icon, size = 22, ...props }) => {
   const actionRef = useRef<HTMLDivElement>(null);
 
   const IconElement = () =>
@@ -72,4 +72,4 @@ const Action: FC<ActionProps> = ({ icon, size = 22, ...props }) => {
   );
 };
 
-export default Action
+export default IconAction

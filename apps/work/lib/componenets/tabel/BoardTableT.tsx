@@ -1,7 +1,15 @@
 import { DragOverEvent } from '@shopify/draggable';
-import { Button } from '@tuesday/ui';
+import { Button, Menu } from '@tuesday/ui';
 import classNames from 'classnames';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FC,
+  FocusEventHandler,
+  ReactElement,
+  useEffect,
+  useState,
+} from 'react';
+import { ColumnType } from '@prisma/client';
 
 export interface BoardColumn<T = any> {
   key: string;
@@ -11,10 +19,20 @@ export interface BoardColumn<T = any> {
   customRender?: (row: T) => ReactElement;
 }
 
+export interface ColumnChangeParams {
+  row: any;
+  cell: any;
+  cellIndex: number;
+  column: BoardColumn;
+  value: string;
+  rowIndex: number;
+}
+
 interface BoardTableTProps {
   columns: BoardColumn[];
   rows: unknown[];
-  onClickAdd?: () => void;
+  onAddColumn: (type: string) => void;
+  onCellChange?: (params: ColumnChangeParams) => void;
 }
 
 const BoardTableT: FC<BoardTableTProps> = ({
@@ -23,6 +41,15 @@ const BoardTableT: FC<BoardTableTProps> = ({
   ...props
 }) => {
   const [columns, setColumns] = useState(gridColumns);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const COLUMN_TYPE_MAP: Record<ColumnType, string> = {
+    TEXT: 'Text',
+    AUTO_NUMBER: 'Number',
+    CHECKBOX: 'Checkbox',
+    LONG_TEXT: 'Description',
+    STATUS: 'Status',
+  };
 
   useEffect(() => {
     const initDraggable = async () => {
@@ -85,6 +112,10 @@ const BoardTableT: FC<BoardTableTProps> = ({
     });
   };
 
+  const onInputBlur = (params: ColumnChangeParams) => {
+    if (props.onCellChange) props.onCellChange(params);
+  };
+
   return (
     <>
       <div className="table-container">
@@ -109,7 +140,25 @@ const BoardTableT: FC<BoardTableTProps> = ({
               ))}
 
               <td className="cell" style={{ width: '100px' }}>
-                <button onClick={props.onClickAdd}>Add</button>
+                <Button onClick={() => setIsMenuOpen(!isMenuOpen)}>Add</Button>
+
+                {isMenuOpen && (
+                  <Menu>
+                    {Object.entries(COLUMN_TYPE_MAP).map(([key, value]) => {
+                      return (
+                        <Button
+                          key={key}
+                          onClick={() => props.onAddColumn(key)}
+                          style={{ textAlign: 'left', justifyContent: 'start' }}
+                          fullWidth
+                          buttonStyle="ghost"
+                        >
+                          {value}
+                        </Button>
+                      );
+                    })}
+                  </Menu>
+                )}
               </td>
             </tr>
           </thead>
@@ -133,7 +182,20 @@ const BoardTableT: FC<BoardTableTProps> = ({
                     }}
                   >
                     <span className="cell__value">
-                      {row[columns[cellIndex].key]}
+                      <BoardTableInput
+                        value={row[columns[cellIndex].key]}
+                        onBlur={(value) =>
+                          onInputBlur({
+                            row,
+                            rowIndex,
+                            cell: row[columns[cellIndex].key],
+                            cellIndex,
+                            column: columns[cellIndex],
+                            value,
+                          })
+                        }
+                      />
+                      {/* {row[columns[cellIndex].key]} */}
                     </span>
                   </td>
                 ))}
@@ -142,16 +204,6 @@ const BoardTableT: FC<BoardTableTProps> = ({
               </tr>
             ))}
           </tbody>
-
-          <tfoot>
-            <tr>
-              <td></td>
-              <td className="cell"> added</td>
-              <td className="cell"> added</td>
-              <td className="cell"> added</td>
-              <td className="cell"> added</td>
-            </tr>
-          </tfoot>
         </table>
       </div>
 
@@ -191,10 +243,10 @@ const BoardTableT: FC<BoardTableTProps> = ({
         }
 
         .cell {
+          position: relative;
           border-bottom: 1px solid var(--color-wolf_gray);
           border-right: 1px solid var(--color-wolf_gray);
           padding: 10px;
-          overflow: hidden;
           background-color: white;
           text-overflow: ellipsis;
 
@@ -223,6 +275,45 @@ const BoardTableT: FC<BoardTableTProps> = ({
   );
 };
 
-BoardTableT.defaultProps = {};
+interface BoardTableProps {
+  value?: string;
+  onBlur?: (value: string) => void;
+  onFocus?: FocusEventHandler;
+}
+
+export const BoardTableInput: FC<BoardTableProps> = ({
+  value = '',
+  ...props
+}) => {
+  const [inputValue, setValue] = useState<string>(value);
+
+  const handleChangeEvent = (event: ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  };
+
+  return (
+    <>
+      <input
+        className="input"
+        type="text"
+        value={inputValue}
+        onChange={handleChangeEvent}
+        onBlur={() => props.onBlur(inputValue)}
+        onFocus={props.onFocus}
+      ></input>
+
+      <style jsx>{`
+        .input {
+          width: 100%;
+          border: 1px solid transparent;
+
+          &:hover {
+            border: 1px solid var(--color-ui_grey);
+          }
+        }
+      `}</style>
+    </>
+  );
+};
 
 export default BoardTableT;

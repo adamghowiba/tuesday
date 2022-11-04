@@ -1,5 +1,12 @@
 import classNames from 'classnames';
-import React, { CSSProperties, FC, PropsWithChildren, ReactNode } from 'react';
+import React, {
+  CSSProperties,
+  FC,
+  MouseEvent,
+  MouseEventHandler,
+  PropsWithChildren,
+  ReactNode,
+} from 'react';
 
 export type ButtonStyle = 'ghost' | 'outlined' | 'filled';
 export type ButtonRadius = 'small' | 'medium' | 'rounded';
@@ -13,6 +20,9 @@ export interface ButtonProps extends PropsWithChildren {
   size?: ButtonSize;
   gap?: string | number;
   style?: CSSProperties;
+  fullWidth?: boolean;
+  textAlign?: 'left' | 'center' | 'right';
+  onClick?: MouseEventHandler;
 }
 
 const Button: FC<ButtonProps> = ({
@@ -21,18 +31,22 @@ const Button: FC<ButtonProps> = ({
   radius = 'small',
   size = 'medium',
   gap = 'var(--space-xs)',
+  textAlign = 'center',
   ...props
 }) => {
   return (
     <>
       <button
         style={{ gap, ...props.style }}
+        onClick={(event) => props?.onClick && props.onClick(event)}
         className={classNames(
           'button',
           `style--${style}`,
           `radius--${radius}`,
           `color--${color}`,
-          `size--${size}`
+          `size--${size}`,
+          `align--${textAlign}`,
+          props.fullWidth && 'full-width'
         )}
       >
         {props.children}
@@ -40,6 +54,7 @@ const Button: FC<ButtonProps> = ({
 
       <style jsx>{`
         .button {
+          width: max-content;
           display: inline-flex;
           align-items: center;
           justify-content: center;
@@ -50,6 +65,10 @@ const Button: FC<ButtonProps> = ({
           font-weight: 500;
           min-height: 32px;
           cursor: pointer;
+        }
+
+        .full-width {
+          width: 100%;
         }
 
         // COLORS
@@ -71,6 +90,23 @@ const Button: FC<ButtonProps> = ({
 
           &--gray:hover {
             background-color: #dcdfec;
+          }
+        }
+
+        .align {
+          &--center {
+            justify-content: center;
+            text-align: center;
+          }
+
+          &--left {
+            text-align: left;
+            justify-content: start;
+          }
+
+          &--right {
+            text-align: right;
+            justify-content: flex-end;
           }
         }
 

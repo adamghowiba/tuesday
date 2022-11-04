@@ -3,11 +3,13 @@ import { Theme } from '../types/theme';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface RootLayoutProps {}
+interface RootLayoutProps extends PropsWithChildren {}
 
-const RootLayout: FC<PropsWithChildren<RootLayoutProps>> = (props) => {
+const RootLayout: FC<RootLayoutProps> = (props) => {
   const theme: Theme = 'light';
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { refetchOnWindowFocus: true } },
+  });
 
   return (
     <>

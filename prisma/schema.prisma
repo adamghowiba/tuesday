@@ -10,14 +10,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// TODO: Implement board status
+enum BoardStatus {
+  PRIVATE
+  SHARED
+}
+
+enum BoardType {
+  DOCUMENT
+  ITEM_BOARD
+}
+
 model Board {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
   description String?
   is_favorite Boolean?
+  status      BoardStatus @default(SHARED)
+  type        BoardType   @default(ITEM_BOARD)
   items       Item[]
   columns     Column[]
-  created_at  DateTime @default(now())
+  created_at  DateTime    @default(now())
+  folder      Folder?     @relation(fields: [folder_id], references: [id])
+  folder_id    Int?
 }
 
 model Item {
@@ -27,6 +42,12 @@ model Item {
   board         Board?   @relation(fields: [board_id], references: [id])
   board_id      Int?
   created_at    DateTime @default(now())
+}
+
+model Folder {
+  id     Int     @id @default(autoincrement())
+  name   String
+  boards Board[]
 }
 
 enum ColumnType {
@@ -43,8 +64,8 @@ model Column {
   description String?
   type        ColumnType
   created_at  DateTime   @default(now())
-  board       Board?     @relation(fields: [board_id], references: [id])
-  board_id     Int?
+  board       Board      @relation(fields: [board_id], references: [id])
+  board_id    Int
 }
 
 model Group {
