@@ -1,4 +1,5 @@
-import { SchemaRequestBody, SchemaResponseBody } from './utils/utils.types';
+import { operations } from './schema';
+import { SchemaCreateResponseBody, SchemaRequestBody, SchemaResponseBody } from './utils/utils.types';
 
 /* ------- LIST ------- */
 export type ListResponseBody = SchemaResponseBody<'BoardsController_findAll'>;
@@ -7,7 +8,7 @@ export type ListResponseBody = SchemaResponseBody<'BoardsController_findAll'>;
 export type GetResponseBody = SchemaResponseBody<'BoardsController_findOne'>;
 
 /* ------- CREATE ------- */
-export type CreateResponse = SchemaResponseBody<'BoardsController_create'>;
+export type CreateResponse = SchemaCreateResponseBody<'BoardsController_create'>;
 export type CreateData = SchemaRequestBody<'BoardsController_create'>;
 
 /* ------- UPDATE ------- */

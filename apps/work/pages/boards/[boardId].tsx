@@ -1,14 +1,20 @@
-import { ColumnType } from '@prisma/client';
+import { ItemApi } from '@tuesday/types';
+import {
+  useAddColumnMutation,
+  useAddItemMutation,
+} from '../../lib/api/hooks/board/board.mutate';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { useMutation, useQuery } from 'react-query';
 import { api } from '../../lib/api/api';
-import BoardTableT, {
+import { useRetriveBoard } from '../../lib/api/hooks/board/board.query';
+import BoardTable from '../../lib/componenets/tabel/board-table/BoardTable';
+import {
   BoardColumn,
   ColumnChangeParams,
 } from '../../lib/componenets/tabel/BoardTableT';
 import BoardHeader from '../../lib/views/board/BoardHeader';
 import BoardHeaderSettings from '../../lib/views/board/BoardHeader-Settings';
+import BoardSidebar from '../../lib/views/board/sidebar/BoardPane';
+import { ColumnType } from '@prisma/client';
 
 interface Item {
   id: number;
@@ -16,19 +22,29 @@ interface Item {
   column_values: Record<number, any>;
 }
 
-const useFetchBoard = (params: { boardId: number }) => {
-  const boardQuery = useQuery(
-    ['boards', params.boardId],
-    async () => (await api.board.retrive(params.boardId)).data,
-    { enabled: !!params.boardId }
-  );
-
-  return boardQuery;
-};
-
 const Boards = () => {
   const { boardId } = useRouter().query;
-  const boardQuery = useFetchBoard({ boardId: +boardId });
+  const boardQuery = useRetriveBoard({ boardId: +boardId });
+
+  const addColumnMuation = useAddColumnMutation({
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (response) => {
+      console.log(response);
+      boardQuery.refetch();
+    },
+  });
+
+  const addItemsMutation = useAddItemMutation({
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (response) => {
+      console.log(response);
+      boardQuery.refetch();
+    },
+  });
 
   const DEFAULT_COLUMNS: BoardColumn[] = [
     { key: 'name', headerName: 'Item', width: 140 },
@@ -44,72 +60,67 @@ const Boards = () => {
     return [...DEFAULT_COLUMNS, ...trasnformedColumns];
   };
 
-  const getFormatedItems = (items: Item[]) => {
+  const getFormatedItems = (items: ItemApi.ListResponseBody) => {
     return items.map((item) => ({ name: item.name, ...item.column_values }));
   };
 
   const handleCellChange = async (params: ColumnChangeParams) => {
-    const { column, rowIndex, value } = params;
-    const row = boardQuery.data.items[rowIndex];
+    const { column, value, row } = params;
 
-    const response = await api.items.update(row.id, {
+    const response = await api.items.update(+row.id, {
       column_values: { [column.key]: value },
     });
 
-    console.log(response.data);
+    console.log(response);
   };
 
-  const addColumnMutation = useMutation(
-    async (params: { type: ColumnType }) => {
-      const response = await api.columns.create(+boardId, {
-        title: params.type,
-        type: params.type,
-      });
+  const handleAddItem = (itemName: string) => {
+    addItemsMutation.mutate({ board_id: +boardId, name: itemName });
+  };
 
-      return response;
-    },
-    {
-      onSuccess: () => {
-        console.log('Success');
-        boardQuery.refetch();
-      },
-    }
-  );
+  const handleAddColumn = (type: ColumnType) => {
+    addColumnMuation.mutate({ boardId: +boardId, title: type, type: type });
+  };
 
   /* Temp Loading State */
   if (boardQuery.isLoading || boardQuery.isIdle) return <h2>Loading...</h2>;
 
   return (
     <>
-      <div className="board-container">
-        <div className="board-header">
-          <BoardHeader title={boardQuery.data.name} />
-          <BoardHeaderSettings />
-        </div>
+      <div className="page-container">
+        <BoardSidebar />
 
-        {boardQuery.data.columns && (
-          <BoardTableT
-            columns={columnsToDataColumns(boardQuery.data.columns)}
-            rows={getFormatedItems(boardQuery.data.items)}
-            onCellChange={handleCellChange}
-            onAddColumn={(type: ColumnType) =>
-              addColumnMutation.mutate({ type })
-            }
-          />
-        )}
+        <div className="board-container">
+          <div className="board-header">
+            <BoardHeader title={boardQuery.data.name} />
+            <BoardHeaderSettings />
+          </div>
+
+          {boardQuery.data.columns && (
+            <BoardTable
+              columns={columnsToDataColumns(boardQuery.data.columns)}
+              rows={[{id: 1, 1: 'Adam', 2: "wild", name: "Okay"}]}
+              onCellEdit={handleCellChange}
+              onAddColumn={handleAddColumn}
+              onAddItem={handleAddItem}
+              color="var(--primary-color)"
+            />
+          )}
+        </div>
       </div>
 
       <style jsx>{`
-        .wrapper {
-          position: relative;
-          overflow-x: auto;
+        .page-container {
+          display: flex;
+          height: 100%;
         }
+
         .board-container {
           display: flex;
           flex-direction: column;
           gap: var(--space-medium);
+          width: 100%;
           overflow-y: visible;
-          width: calc(100vw - 70px);
           padding: var(--space-large);
         }
 

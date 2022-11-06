@@ -7,5 +7,8 @@ export class FolderEntity
   implements Folder
 {
   @ApiProperty()
+  parent_folder_id!: number | null;
+
+  @ApiProperty()
   id!: number;
 }

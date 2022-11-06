@@ -28,5 +28,5 @@ export class CreateColumnDto implements OmitCreateDtoFields<Column> {
   @IsOptional()
   description!: string | null;
 
-  board_id!: number | null;
+  board_id!: number;
 }

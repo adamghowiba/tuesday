@@ -13,6 +13,6 @@ export class CreateItemDto implements OmitCreateDtoFields<Item> {
   column_values: any = {};
 
   @IsNumber()
-  @ApiProperty()
+  @ApiProperty({type: Number})
   board_id!: number | null;
 }

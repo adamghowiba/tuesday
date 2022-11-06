@@ -51,6 +51,7 @@ export interface components {
       description?: string;
     };
     FolderEntity: {
+      parent_folder_id?: number;
       name: string;
       id: number;
     };
@@ -65,7 +66,7 @@ export interface components {
     ItemEntity: {
       name: string;
       column_values?: { [key: string]: unknown };
-      board_id: { [key: string]: unknown };
+      board_id: number;
       id: number;
       created_at: string;
     };
@@ -88,12 +89,12 @@ export interface components {
     CreateItemDto: {
       name: string;
       column_values?: { [key: string]: unknown };
-      board_id: { [key: string]: unknown };
+      board_id: number;
     };
     UpdateItemDto: {
       name?: string;
       column_values?: { [key: string]: unknown };
-      board_id?: { [key: string]: unknown };
+      board_id?: number;
     };
     CreateColumnDto: {
       /** @enum {string} */

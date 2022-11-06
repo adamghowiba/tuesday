@@ -16,5 +16,5 @@
     "**/*.test.jsx",
     "**/*.spec.jsx",
     "**/*.d.ts"
-  ]
+, "src/lib/componenets/radio/types.ts"  ]
 }

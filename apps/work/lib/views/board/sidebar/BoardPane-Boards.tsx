@@ -17,6 +17,7 @@ export interface BoardItem {
   name: string;
   description?: string;
   folder?: string;
+  id: number;
   type: BoardApi.GetResponseBody['type'];
 }
 
@@ -29,7 +30,7 @@ export interface BoardPaneBoardsProps {
   boards: BoardItem[];
 }
 
-const getBoardFolders = (board: BoardItem[]) => {
+const getBoards = (board: BoardItem[]) => {
   return board.reduce(
     (acc: FormattedBoards, board) => {
       if (board.folder) {
@@ -45,37 +46,51 @@ const getBoardFolders = (board: BoardItem[]) => {
     { folders: {}, standalone: [] }
   );
 };
+
 const BoardPaneBoards: FC<BoardPaneBoardsProps> = (props) => {
-  const formattedBoards = getBoardFolders(props.boards);
+  const formattedBoards = getBoards(props.boards);
 
   useEffect(() => {
-    console.log(Object.entries(formattedBoards.folders));
+    console.log(formattedBoards);
   }, []);
 
   return (
     <>
       <Tree
-        treeData={Object.entries(formattedBoards.folders).map(([key, items]) => ({
-          key,
-          component: (
-            <Button buttonStyle="ghost" fullWidth textAlign="left">
-              <span>{key}</span>
-            </Button>
-          ),
-          children: (
-            <>
-              {items.map((board) => (
-                <BoardButton key={board.key} type={board.type}>
-                  {board.name}
-                </BoardButton>
-              ))}
-            </>
-          ),
-        }))}
+        treeData={Object.entries(formattedBoards.folders).map(
+          ([key, boardItems]) => ({
+            key: crypto.randomUUID(),
+            component: (params) => (
+              <Button buttonStyle="ghost" fullWidth textAlign="left">
+                <Icon
+                  icon={triangleDown12Filled}
+                  width={11}
+                  height={11}
+                  rotate={params.isOpen ? 0 : 3}
+                  color="var(--secondary-text-color)"
+                />
+                <span>{key}</span>
+              </Button>
+            ),
+            children: boardItems.map((board) => (
+              <BoardButton
+                href={`/boards/${board.id}`}
+                key={crypto.randomUUID()}
+                type={board.type}
+              >
+                {board.name}
+              </BoardButton>
+            )),
+          })
+        )}
       />
 
       {formattedBoards.standalone.map((board) => (
-        <BoardButton key={board.key} type={board.type}>
+        <BoardButton
+          href={`/boards/${board.id}`}
+          key={board.key}
+          type={board.type}
+        >
           {board.name}
         </BoardButton>
       ))}
@@ -86,9 +101,10 @@ const BoardPaneBoards: FC<BoardPaneBoardsProps> = (props) => {
 
 interface BoardButtonProps extends PropsWithChildren {
   type: BoardItem['type'];
+  href: string;
 }
 
-const BoardButton: FC<BoardButtonProps> = ({ ...props }) => {
+export const BoardButton: FC<BoardButtonProps> = ({ ...props }) => {
   const BOARD_ICON: Record<BoardItem['type'], IconifyIcon> = {
     DOCUMENT: documentBulletList20Regular,
     ITEM_BOARD: tableBottomRow16Regular,
@@ -101,6 +117,7 @@ const BoardButton: FC<BoardButtonProps> = ({ ...props }) => {
         fullWidth
         textAlign="left"
         gap="var(--space-small)"
+        href={props.href}
       >
         <Icon icon={BOARD_ICON[props.type]} width={18} height={18} />
         <span>{props.children}</span>
@@ -109,7 +126,5 @@ const BoardButton: FC<BoardButtonProps> = ({ ...props }) => {
     </>
   );
 };
-
-BoardPaneBoards.defaultProps = {};
 
 export default BoardPaneBoards;

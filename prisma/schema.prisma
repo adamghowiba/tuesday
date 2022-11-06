@@ -32,7 +32,7 @@ model Board {
   columns     Column[]
   created_at  DateTime    @default(now())
   folder      Folder?     @relation(fields: [folder_id], references: [id])
-  folder_id    Int?
+  folder_id   Int?
 }
 
 model Item {
@@ -45,9 +45,12 @@ model Item {
 }
 
 model Folder {
-  id     Int     @id @default(autoincrement())
-  name   String
-  boards Board[]
+  id               Int      @id @default(autoincrement())
+  name             String
+  boards           Board[]
+  parent_folder    Folder?  @relation("parent_folder", fields: [parent_folder_id], references: [id])
+  parent_folder_id Int?
+  child_folders           Folder[] @relation("parent_folder")
 }
 
 enum ColumnType {

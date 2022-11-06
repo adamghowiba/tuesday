@@ -6,7 +6,7 @@
  */
 export const parseUnit = (
   value: string | number,
-  defaultUnit: 'px' | 'em' | 'percentage' = 'px'
+  defaultUnit: 'px' | 'em' | 'rem' | 'percentage' = 'px'
 ) => {
   if (typeof value === 'string') return value;
 

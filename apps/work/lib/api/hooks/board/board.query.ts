@@ -17,7 +17,7 @@ export const useRetriveBoard = ({ boardId }: { boardId: number }) => {
     const response = await api.board.retrive(boardId);
 
     return response.data;
-  });
+  }, {enabled: !!boardId});
 
   return boardQuery;
 };

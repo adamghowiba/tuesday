@@ -19,8 +19,8 @@ export class Items {
     return response;
   }
 
-  async create(itemId: number, data: ItemApi.CreateData) {
-    const response = await this.request.post(`/boards/${itemId}/items`, data);
+  async create(boardId: number, data: ItemApi.CreateData) {
+    const response = await this.request.post(`/items`, data);
 
     return response;
   }

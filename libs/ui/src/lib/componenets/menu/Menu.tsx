@@ -1,20 +1,21 @@
 import { parseUnit } from '@tuesday/utils';
 import classNames from 'classnames';
 import React, { CSSProperties, FC, PropsWithChildren } from 'react';
+import Stack from '../layout/stack/Stack';
 
 export interface MenuProps extends PropsWithChildren {
-  elevation?: 'medium' | 'large';
   xPosition?: 'left' | 'right' | 'center';
   yPosition?: 'top' | 'bottom';
+  elevation?: 'medium' | 'large';
   width?: number | string;
   height?: number | string;
   style?: CSSProperties;
 }
 
 const Menu: FC<MenuProps> = ({
-  elevation = 'medium',
   xPosition,
   yPosition,
+  elevation = 'medium',
   width = 'auto',
   height = 'auto',
   style,
@@ -48,10 +49,31 @@ const Menu: FC<MenuProps> = ({
             flex-direction: column;
             gap: var(--space-xs);
           }
+
+          &.x-position--right {
+            right: 0;
+          }
+
+          &.x-position--center {
+            right: 50%;
+            transform: translateX(-50%);
+          }
+
+          &.x-position--left {
+            left: 0;
+          }
+
+          &.y-position--top {
+            top: 0;
+            bottom: unset;
+            transform: translateY(-100%);
+          }
         }
       `}</style>
     </>
   );
 };
+
+
 
 export default Menu;

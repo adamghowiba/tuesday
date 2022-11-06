@@ -195,7 +195,6 @@ const BoardTableT: FC<BoardTableTProps> = ({
                           })
                         }
                       />
-                      {/* {row[columns[cellIndex].key]} */}
                     </span>
                   </td>
                 ))}

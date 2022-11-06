@@ -1,23 +1,28 @@
-import React, { FC, useState } from 'react';
-import IconAction from '../../../componenets/global/IconAction';
-import iosArrowLtr24Filled from '@iconify/icons-fluent/ios-arrow-ltr-24-filled';
-import { Icon } from '@iconify/react';
-import classNames from 'classnames';
-import { Button, Tree } from '@tuesday/ui';
 import add16Filled from '@iconify/icons-fluent/add-16-filled';
 import filter16Filled from '@iconify/icons-fluent/filter-16-filled';
+import iosArrowLtr24Filled from '@iconify/icons-fluent/ios-arrow-ltr-24-filled';
 import search16Regular from '@iconify/icons-fluent/search-16-regular';
-import settings16Regular from '@iconify/icons-fluent/settings-16-regular';
+import { Icon } from '@iconify/react';
+import { Button } from '@tuesday/ui';
+import classNames from 'classnames';
+import { FC, useEffect, useState } from 'react';
+import { useListBoards } from '../../../api/hooks/board/board.query';
 import Divider from '../../../componenets/global/Divider';
+import BoardModal from '../modals';
 import BoardPaneBoards from './BoardPane-Boards';
-import { useListBoards } from '../../../api/hooks/board/fetchBoard';
+import BoardPaneHeader from './BoardPane-Header';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface BoardSidebarProps {}
 
 const BoardSidebar: FC<BoardSidebarProps> = (props) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const boards = useListBoards();
+
+  useEffect(() => {
+    console.log(isCreateModalOpen);
+  }, [isCreateModalOpen]);
 
   return (
     <>
@@ -25,15 +30,16 @@ const BoardSidebar: FC<BoardSidebarProps> = (props) => {
         className={classNames('sidebar-container', isSidebarOpen && 'isOpen')}
       >
         <div className="sidebar">
-          <header>
-            <div className="workspace">
-              <span className="workspace__title">Workspace</span>
-              <Icon icon={settings16Regular} width={20} height={20} />
-            </div>
-          </header>
+          <BoardPaneHeader />
 
           <div className="main-actions">
-            <Button buttonStyle="ghost" textAlign="left" fullWidth>
+            <Button
+              buttonStyle="ghost"
+              textAlign="left"
+              fullWidth
+              stopPropagation
+              onClick={() => setIsCreateModalOpen(true)}
+            >
               <Icon icon={add16Filled} width={20} height={20} />
               Add
             </Button>
@@ -53,10 +59,11 @@ const BoardSidebar: FC<BoardSidebarProps> = (props) => {
             {boards.isSuccess && (
               <BoardPaneBoards
                 boards={boards.data.map((board) => ({
-                  key: board.id,
+                  key: crypto.randomUUID(),
                   name: board.name,
                   type: board.type,
                   folder: board?.folder?.name,
+                  id: board.id
                 }))}
               />
             )}
@@ -73,24 +80,32 @@ const BoardSidebar: FC<BoardSidebarProps> = (props) => {
         </div>
       </div>
 
+      {isCreateModalOpen && (
+        <BoardModal.Create onExit={() => setIsCreateModalOpen(false)} />
+      )}
+
       <style jsx>{`
         .sidebar-container {
           position: relative;
           height: 100%;
           width: 40px;
+          flex-shrink: 0;
           background-color: rgb(246, 247, 251);
           padding: var(--space-medium);
 
-          &.isOpen {
-            width: 254px;
-          }
-
-          &.isOpen .sidebar {
-            display: block;
-          }
-
           .sidebar {
             display: none;
+          }
+        }
+
+        .isOpen {
+          width: 250px;
+
+          .control {
+            transform: rotate(0deg);
+          }
+          .sidebar {
+            display: block;
           }
         }
 
@@ -99,23 +114,31 @@ const BoardSidebar: FC<BoardSidebarProps> = (props) => {
 
         .control {
           position: absolute;
-          right: 0;
-          top: 0;
+          top: var(--space-xl);
+          right: calc(var(--space-medium) * -1);
           width: 25px;
           height: 25px;
           border: 1px solid var(--color-wolf_gray);
-          transform: translate(50%, 80%);
           box-shadow: var(--box-shadow-xs);
           background-color: var(--color-snow_white);
           border-radius: 5px;
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 50%;
+          border-radius: 100px;
+          transition: width 0.15s linear, transform 0.2s ease;
+          cursor: pointer;
+          transform: rotate(180deg);
 
           &__icon {
             position: relative;
             left: 1px;
+          }
+
+          &:hover {
+            background-color: var(--primary-color);
+            color: var(--color-snow_white);
+            width: 35px;
           }
         }
 
