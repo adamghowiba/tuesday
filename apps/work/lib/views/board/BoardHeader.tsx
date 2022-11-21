@@ -1,9 +1,8 @@
-import { Button } from '@tuesday/ui';
-import React, { FC } from 'react';
-import { Icon } from '@iconify/react';
 import info24Regular from '@iconify/icons-fluent/info-24-regular';
-import star16Regular from '@iconify/icons-fluent/star-16-regular';
 import star20Filled from '@iconify/icons-fluent/star-20-filled';
+import { Icon } from '@iconify/react';
+import { Button } from '@tuesday/ui';
+import { FC } from 'react';
 import ToolTip from '../../componenets/global/tooltip/Tooltip';
 
 interface BoardHeaderProps {

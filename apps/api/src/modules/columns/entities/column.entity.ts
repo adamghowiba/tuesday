@@ -1,1 +1,11 @@
-export class Column {}
+import { ApiProperty } from '@nestjs/swagger';
+import { Column } from '@prisma/client';
+import { CreateColumnDto } from '../dto/create-column.dto';
+
+export class ColumnEntity extends CreateColumnDto implements Column {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty({ type: String })
+  created_at!: Date;
+}

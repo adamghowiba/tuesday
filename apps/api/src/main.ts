@@ -9,6 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
+    credentials: true,
     origin: (orgin, callback) => callback(null, orgin),
   });
   app.enableVersioning({ defaultVersion: '1', type: VersioningType.URI });
