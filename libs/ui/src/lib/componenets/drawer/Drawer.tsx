@@ -7,6 +7,7 @@ export interface DrawerProps extends PropsWithChildren {
   backgroundColor?: string;
   isOpen?: boolean;
   width?: number | string;
+  zIndex?: number;
 }
 
 const Drawer: FC<DrawerProps> = ({
@@ -14,13 +15,14 @@ const Drawer: FC<DrawerProps> = ({
   backgroundColor = 'var(--color-snow)',
   isOpen = false,
   width = 400,
+  zIndex = 110,
   ...props
 }) => {
   return (
     <>
       <AnimatePresence>
         {isOpen && (
-          <div className="drawer-container">
+          <div className="drawer-container" style={{ zIndex }}>
             <motion.div
               key="drawer"
               initial={{ translateX: '-100%' }}

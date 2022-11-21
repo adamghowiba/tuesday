@@ -30,7 +30,7 @@ const NotifcationDrawer: FC<NotifcationDrawerProps> = ({
 
   return (
     <>
-      <Drawer isOpen={isOpen} width={550}>
+      <Drawer isOpen={isOpen} width={550} backgroundColor="var(--color-snow_white)">
         <header>
           <Stack
             direction="row"

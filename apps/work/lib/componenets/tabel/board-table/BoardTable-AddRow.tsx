@@ -24,20 +24,19 @@ const BoardTableAddRow: FC<BoardTableAddRowProps> = ({ colSpan, ...props }) => {
     <>
       <TableRow>
         <TableCell
-          colSpan={1}
           borderRadius="0 0 0 var(--space-xs)"
           borderLeft="3px solid var(--primary-color)"
+          colSpan={colSpan}
         >
           <BoardTableInput
             onBlur={handleBlurEvent}
             onFocus={handleFocusEvent}
+            align="left"
             placeholder="+ Add item"
             value={inputValue}
             onChange={(event, value) => setInputValue(value)}
           />
         </TableCell>
-        <TableCell colSpan={colSpan - 1}></TableCell>
-        <TableCell></TableCell>
       </TableRow>
       <style jsx>{``}</style>
     </>

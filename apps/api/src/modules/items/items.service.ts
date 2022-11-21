@@ -32,6 +32,7 @@ export class ItemsService {
     });
 
     let itemColumnValues: any = undefined;
+
     if (updateItemDto.column_values && typeof item.column_values === 'object') {
       itemColumnValues = {
         ...item.column_values,

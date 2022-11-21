@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { filterEmptyKeys } from '@tuesday/utils';
 import { Board } from './modules/board.access';
-import { ColumnApi } from '@tuesday/types';
 import { Columns } from './modules/columns.access';
 import { Items } from './modules/items.access';
+import { Statuses } from './modules/stauses.access';
+import { Groups } from './modules/groups.access';
 
 const DEFAULT_HOST = 'https://api.tuesday.com';
 const DEFAULT_VERSION: RequestParams['version'] = 'v1';
@@ -93,10 +94,14 @@ export class TuesdayApi {
   public board: Board;
   public columns: Columns;
   public items: Items;
+  public statuses: Statuses;
+  public groups: Groups;
 
   constructor(public params?: Partial<RequestParams>) {
     const request = new Request(params);
 
+    this.groups = new Groups(request);
+    this.statuses = new Statuses(request);
     this.board = new Board(request);
     this.columns = new Columns(request);
     this.items = new Items(request);

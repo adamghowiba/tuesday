@@ -11,6 +11,10 @@ type TableCellStyles = Pick<
   | 'backgroundColor'
   | 'borderRadius'
   | 'padding'
+  | 'display'
+  | 'justifyContent'
+  | 'alignItems'
+  | 'gap'
 >;
 
 export interface TableCellProps extends PropsWithChildren, TableCellStyles {
@@ -18,29 +22,44 @@ export interface TableCellProps extends PropsWithChildren, TableCellStyles {
   colSpan?: number;
 }
 
-const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(({
-  children,
-  padding = 'var(--space-xs)',
-  rowSpan,
-  colSpan,
-  ...props
-}, ref) => {
-  return (
-    <>
-      <td ref={ref} colSpan={colSpan} rowSpan={rowSpan} style={{ ...props, padding }}>
-        <div className="cell">{children}</div>
-      </td>
+const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(
+  (
+    {
+      children,
+      padding,
+      rowSpan,
+      colSpan,
+      display = 'flex',
+      alignItems="center",
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <>
+        <td ref={ref} colSpan={colSpan} rowSpan={rowSpan}>
+          <div className="cell" style={{ ...props, padding, alignItems, display }}>
+            {children}
+          </div>
+        </td>
 
-      <style jsx>{`
-        td {
-          border-bottom: 1px solid #d0d4e4;
-          border-left: 1px solid #d0d4e4;
-        }
-      `}</style>
-    </>
-  );
-});
+        <style jsx>{`
+          td {
+            padding: 0;
+            border-bottom: 1px solid #d0d4e4;
+            border-left: 1px solid #d0d4e4;
+            height: 30px;
+          }
+          .cell {
+            margin: 0;
+            height: 100%;
+          }
+        `}</style>
+      </>
+    );
+  }
+);
 
-TableCell.displayName = TableCell.name
+TableCell.displayName = TableCell.name;
 
 export default TableCell;

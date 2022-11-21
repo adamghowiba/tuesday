@@ -1,4 +1,3 @@
-import { operations } from './schema';
 import { SchemaCreateResponseBody, SchemaRequestBody, SchemaResponseBody } from './utils/utils.types';
 
 /* ------- LIST ------- */

@@ -71,7 +71,6 @@ const BoardTableT: FC<BoardTableTProps> = ({
       swapable.on('drag:stop', () => {
         if (!draggingElement?.fromIndex || !draggingElement?.toIndex) return;
         const { fromIndex, toIndex } = draggingElement;
-        console.log('switched to', draggingElement);
 
         let swappedColumns: BoardColumn[] = [];
 

@@ -1,14 +1,19 @@
-import React, {
+import {
   ChangeEvent,
-  ChangeEventHandler,
   FC,
   FocusEvent,
   FocusEventHandler,
+  InputHTMLAttributes,
   useEffect,
   useState,
 } from 'react';
 
 interface BoardTableInputProps {
+  value?: string;
+  placeholder?: string;
+  type?: InputHTMLAttributes<HTMLInputElement>['type'];
+  align?: 'center' | 'left' | 'right';
+  maxWidth?: number | string;
   onChange?: (event: ChangeEvent<HTMLInputElement>, value: string) => void;
   onBlur?: (
     event: FocusEvent,
@@ -16,13 +21,14 @@ interface BoardTableInputProps {
     params: { isChanged: boolean }
   ) => void;
   onFocus?: FocusEventHandler;
-  value?: string;
-  placeholder?: string;
 }
 
 export const BoardTableInput: FC<BoardTableInputProps> = ({
   value = '',
+  type = 'text',
   placeholder,
+  align = 'center',
+  maxWidth = 'none',
   ...props
 }) => {
   const [inputValue, setValue] = useState<string>(value);
@@ -40,7 +46,7 @@ export const BoardTableInput: FC<BoardTableInputProps> = ({
     <>
       <input
         className="input"
-        type="text"
+        type={type}
         value={inputValue}
         placeholder={placeholder}
         onChange={handleChangeEvent}
@@ -48,13 +54,15 @@ export const BoardTableInput: FC<BoardTableInputProps> = ({
           props?.onBlur && props.onBlur(event, inputValue, { isChanged: true })
         }
         onFocus={props.onFocus}
+        style={{ maxWidth }}
       ></input>
 
       <style jsx>{`
         .input {
-          width: 100%;
           border: 1px solid transparent;
           background-color: transparent;
+          text-align: ${align};
+          width: 100%;
 
           &::placeholder {
             font-size: 14px;

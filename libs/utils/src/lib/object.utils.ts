@@ -8,7 +8,7 @@ export const filterEmptyKeys = (object: Record<string, any>) => {
   );
 };
 
-export const filterKeys = <T extends Record<string, unknown>>(
+export const filterKeys = <T extends object>(
   object: T,
   keys: Array<keyof T>
 ) => {

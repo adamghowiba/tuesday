@@ -16,13 +16,9 @@ import BoardPaneHeader from './BoardPane-Header';
 interface BoardSidebarProps {}
 
 const BoardSidebar: FC<BoardSidebarProps> = (props) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const boards = useListBoards();
-
-  useEffect(() => {
-    console.log(isCreateModalOpen);
-  }, [isCreateModalOpen]);
 
   return (
     <>

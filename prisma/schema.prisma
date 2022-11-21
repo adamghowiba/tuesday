@@ -29,10 +29,21 @@ model Board {
   status      BoardStatus @default(SHARED)
   type        BoardType   @default(ITEM_BOARD)
   items       Item[]
+  groups      Group[]
   columns     Column[]
-  created_at  DateTime    @default(now())
+  statuses    Status[]
   folder      Folder?     @relation(fields: [folder_id], references: [id])
   folder_id   Int?
+  created_at  DateTime    @default(now())
+}
+
+model Group {
+  id       Int    @id @default(autoincrement())
+  color    String
+  title    String
+  items    Item[]
+  board    Board  @relation(fields: [board_id], references: [id])
+  board_id Int
 }
 
 model Item {
@@ -41,6 +52,8 @@ model Item {
   column_values Json
   board         Board?   @relation(fields: [board_id], references: [id])
   board_id      Int?
+  group         Group?   @relation(fields: [group_id], references: [id])
+  group_id      Int?
   created_at    DateTime @default(now())
 }
 
@@ -50,7 +63,8 @@ model Folder {
   boards           Board[]
   parent_folder    Folder?  @relation("parent_folder", fields: [parent_folder_id], references: [id])
   parent_folder_id Int?
-  child_folders           Folder[] @relation("parent_folder")
+  child_folders    Folder[] @relation("parent_folder")
+  created_at       DateTime @default(now())
 }
 
 enum ColumnType {
@@ -62,7 +76,7 @@ enum ColumnType {
 }
 
 model Column {
-  id          Int        @id @default(autoincrement())
+  id          String     @id
   title       String
   description String?
   type        ColumnType
@@ -71,9 +85,15 @@ model Column {
   board_id    Int
 }
 
-model Group {
-  id   Int    @id @default(autoincrement())
-  name String
+model Status {
+  id         Int      @id @default(autoincrement())
+  label      String
+  color      String
+  index      Int?
+  board      Board    @relation(fields: [board_id], references: [id])
+  board_id   Int
+  is_default Boolean  @default(false)
+  created_at DateTime @default(now())
 }
 
 // UNIMPLEMENTED

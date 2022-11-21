@@ -7,7 +7,6 @@ import { Transform } from 'class-transformer';
 export class CreateColumnDto implements OmitCreateDtoFields<Column> {
   @IsEnum(ColumnType, {
     message(params) {
-      console.log(params);
       return `Property ${params.property} must be of type [${params.constraints
         .map((constraint) =>
           Object.values(constraint).map((value) => String(value).toLowerCase())

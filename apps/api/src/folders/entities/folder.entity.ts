@@ -11,4 +11,7 @@ export class FolderEntity
 
   @ApiProperty()
   id!: number;
+
+  @ApiProperty({type: String})
+  created_at!: Date;
 }

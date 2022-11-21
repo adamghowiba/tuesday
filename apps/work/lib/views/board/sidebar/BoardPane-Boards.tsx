@@ -1,16 +1,14 @@
-import { Icon, IconifyIcon } from '@iconify/react';
-import { Button, Tree } from '@tuesday/ui';
-import triangleDown12Filled from '@iconify/icons-fluent/triangle-down-12-filled';
-import React, {
-  FC,
-  Key,
-  PropsWithChildren,
-  ReactElement,
-  useEffect,
-} from 'react';
 import documentBulletList20Regular from '@iconify/icons-fluent/document-bullet-list-20-regular';
 import tableBottomRow16Regular from '@iconify/icons-fluent/table-bottom-row-16-regular';
+import triangleDown12Filled from '@iconify/icons-fluent/triangle-down-12-filled';
+import { Icon, IconifyIcon } from '@iconify/react';
 import { BoardApi } from '@tuesday/types';
+import { Button, Tree } from '@tuesday/ui';
+import {
+  FC,
+  Key,
+  PropsWithChildren, useEffect
+} from 'react';
 
 export interface BoardItem {
   key: Key;
@@ -49,10 +47,6 @@ const getBoards = (board: BoardItem[]) => {
 
 const BoardPaneBoards: FC<BoardPaneBoardsProps> = (props) => {
   const formattedBoards = getBoards(props.boards);
-
-  useEffect(() => {
-    console.log(formattedBoards);
-  }, []);
 
   return (
     <>

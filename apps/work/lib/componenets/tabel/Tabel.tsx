@@ -8,6 +8,8 @@ const Table: FC<TableProps> = (props) => {
       <table>{props.children}</table>
       <style jsx>{`
         table {
+          table-layout: fixed;
+
           width: 100%;
           background-color: var(--color-snow_white);
           border-radius: var(--border-radius-medium);

@@ -1,35 +1,25 @@
-import { Button, Tree } from '@tuesday/ui';
-import React, { useEffect } from 'react';
-import { BoardButton } from '../lib/views/board/sidebar/BoardPane-Boards';
+import { Button, MenuV2, TextInput } from '@tuesday/ui';
+import OverFlowButton from 'libs/ui/src/lib/componenets/button/OverflowButton';
+import { useEffect, useRef, useState } from 'react';
+import EditableInput from '../lib/componenets/global/EditableInput';
 
 const Test = () => {
+  const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
+  const settingsMenuButtonRef = useRef<HTMLButtonElement>(null);
+
   return (
     <>
-      <Tree
-        treeData={[
-          {
-            key: 'web',
-            component: <Button> Web Revived </Button>,
-            children: [
-              <BoardButton type="DOCUMENT" key="master">
-                Master
-              </BoardButton>,
-              {
-                key: 'backend',
-                component: <Button>Backend</Button>,
-                children: [
-                  <BoardButton type="DOCUMENT" key="hello">
-                    {' '}
-                    Server{' '}
-                  </BoardButton>,
-                ],
-              },
-            ],
-          },
-        ]}
-      />
+      <div className="pad">
+        <EditableInput type="text" value="Something">
+          <h4>Some title</h4>
+        </EditableInput>
+      </div>
 
-      <style jsx>{``}</style>
+      <style jsx>{`
+        .pad {
+          margin: 6rem;
+        }
+      `}</style>
     </>
   );
 };

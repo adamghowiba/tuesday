@@ -8,12 +8,10 @@ export const getForamtedRows = (rows: any[], columns: BoardColumn[]) => {
     return Object.values(columns).reduce((acc: any, col, i) => {
       const matchingData = row?.[col.key];
 
-      acc[col.key] = isNotEmpty(matchingData) ? matchingData : '--';
+      acc[col.key] = isNotEmpty(matchingData) ? matchingData : '';
       return acc;
     }, {});
   });
-
-  console.log(rowData);
 
   return rowData;
 };

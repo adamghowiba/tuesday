@@ -18,6 +18,7 @@ export interface TextInputProps {
   value?: string | number;
   error?: string | string[];
   helperText?: string | string[];
+  fullWidth?: boolean;
   onChange?: ChangeEventHandler;
   onFocus?: FocusEventHandler;
   onBlur?: FocusEventHandler;
@@ -32,6 +33,7 @@ const TextInput: FC<TextInputProps> = ({
   error,
   helperText,
   value = '',
+  fullWidth = false,
   onBlur,
   onFocus,
   ...props
@@ -50,15 +52,21 @@ const TextInput: FC<TextInputProps> = ({
 
   return (
     <>
-      <div className="input-container">
+      <div
+        className={classNames(
+          'input-container',
+          fullWidth && 'fullWidth'
+        )}
+      >
         {label && <Label htmlFor={name}>{label}</Label>}
         <input
           name={name}
+          value={inputValue}
           placeholder={placeholder}
           onChange={onChange}
           onFocus={onFocus}
           onBlur={onBlur}
-          className={classNames('input', `size--${size}`, `style--${style}`)}
+          className={classNames('input', `size--${size}`, `style--${style}`, fullWidth && 'fullWidth')}
         />
         {error ? (
           <span className={'bottom-text bottom-text--error'}>{error}</span>
@@ -74,6 +82,10 @@ const TextInput: FC<TextInputProps> = ({
           display: flex;
           flex-direction: column;
           gap: var(--space-xs);
+
+          &.fullWidth {
+            width: 100%;
+          }
         }
 
         .bottom-text {
@@ -99,6 +111,10 @@ const TextInput: FC<TextInputProps> = ({
             color: var(--ui-border-on-secondary-color);
           }
 
+          &.fullWidth {
+            width: 100%;
+          }
+
           // SIZES
           &.size--large {
           }
@@ -108,6 +124,8 @@ const TextInput: FC<TextInputProps> = ({
           }
 
           &.size--small {
+            padding: calc(var(--space-xs) - 2px) var(--space-xs);
+            font-size: var(--font-size-subtext);
           }
 
           // STYLE

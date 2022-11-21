@@ -27,7 +27,9 @@ export interface ButtonProps extends PropsWithChildren {
   stopPropagation?: boolean;
   active?: boolean;
   href?: string;
-  textWrap?: 'nowrap' | "normal";
+  textWrap?: 'nowrap' | 'normal';
+  onMouseLeave?: MouseEventHandler;
+  onMouseEnter?: MouseEventHandler;
   onClick?: MouseEventHandler;
 }
 
@@ -43,7 +45,6 @@ const DEFAULT_BUTTON_PROPS: ButtonProps = {
   fullWidth: false,
   textWrap: 'normal',
   stopPropagation: false,
-
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -62,7 +63,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       active,
       fullWidth,
       stopPropagation,
-      textWrap
+      textWrap,
     } = { ...DEFAULT_BUTTON_PROPS, ...menuContext?.buttonProps, ...props };
 
     return (
@@ -70,6 +71,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         <button
           style={{ gap, ...props.sx }}
           type={buttonType}
+          onMouseEnter={props.onMouseEnter}
+          onMouseLeave={props.onMouseLeave}
           onClick={(event) => {
             if (href) router.push(href);
 
@@ -104,7 +107,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             line-height: 1em;
             font-weight: 500;
             min-height: 32px;
-            height: min-content;
             cursor: pointer;
             white-space: ${textWrap};
           }

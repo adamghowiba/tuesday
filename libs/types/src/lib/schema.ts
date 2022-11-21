@@ -36,6 +36,29 @@ export interface paths {
     delete: operations["ColumnsController_remove"];
     patch: operations["ColumnsController_update"];
   };
+  "/v1/statuses": {
+    get: operations["StatusesController_findAll"];
+    post: operations["StatusesController_create"];
+  };
+  "/v1/statuses/{id}": {
+    get: operations["StatusesController_findOne"];
+    delete: operations["StatusesController_remove"];
+    patch: operations["StatusesController_update"];
+  };
+  "/v1/statuses/batch": {
+    patch: operations["StatusesController_updateBatch"];
+  };
+  "/v1/boards/{boardId}/groups": {
+    get: operations["GroupsController_list"];
+    post: operations["GroupsController_create"];
+  };
+  "/v1/groups/{id}": {
+    get: operations["GroupsController_retrive"];
+    delete: operations["GroupsController_remove"];
+  };
+  "/v1/{id}": {
+    patch: operations["GroupsController_update"];
+  };
 }
 
 export interface components {
@@ -54,12 +77,21 @@ export interface components {
       parent_folder_id?: number;
       name: string;
       id: number;
+      created_at: string;
     };
     ColumnEntity: {
       /** @enum {string} */
       type: "AUTO_NUMBER" | "CHECKBOX" | "LONG_TEXT" | "TEXT" | "STATUS";
       title: string;
       description?: string;
+      id: string;
+      created_at: string;
+    };
+    StatusEntity: {
+      label: string;
+      color: string;
+      index?: number;
+      board_id?: number;
       id: number;
       created_at: string;
     };
@@ -67,8 +99,16 @@ export interface components {
       name: string;
       column_values?: { [key: string]: unknown };
       board_id: number;
+      group_id: number;
       id: number;
       created_at: string;
+    };
+    GroupsEntity: {
+      color: string;
+      title: string;
+      id: number;
+      items: components["schemas"]["ItemEntity"][];
+      board_id: number;
     };
     BoardEntity: {
       name: string;
@@ -83,18 +123,22 @@ export interface components {
       created_at: string;
       folder: components["schemas"]["FolderEntity"];
       columns: components["schemas"]["ColumnEntity"][];
+      statuses: components["schemas"]["StatusEntity"][];
       items: components["schemas"]["ItemEntity"][];
+      groups: components["schemas"]["GroupsEntity"][];
     };
     UpdateBoardDto: { [key: string]: unknown };
     CreateItemDto: {
       name: string;
       column_values?: { [key: string]: unknown };
       board_id: number;
+      group_id: number;
     };
     UpdateItemDto: {
       name?: string;
       column_values?: { [key: string]: unknown };
       board_id?: number;
+      group_id?: number;
     };
     CreateColumnDto: {
       /** @enum {string} */
@@ -107,6 +151,36 @@ export interface components {
       type?: "AUTO_NUMBER" | "CHECKBOX" | "LONG_TEXT" | "TEXT" | "STATUS";
       title?: string;
       description?: string;
+    };
+    CreateStatusDto: {
+      label: string;
+      color: string;
+      index?: number;
+      board_id?: number;
+    };
+    BatchUpdateStatusData: {
+      label?: string;
+      color?: string;
+      index?: number;
+      board_id?: number;
+      id: number;
+    };
+    BatchUpdateStatusDto: {
+      data: components["schemas"]["BatchUpdateStatusData"][];
+    };
+    UpdateStatusDto: {
+      label?: string;
+      color?: string;
+      index?: number;
+      board_id?: number;
+    };
+    CreateGroupDto: {
+      color: string;
+      title: string;
+    };
+    UpdateGroupDto: {
+      color?: string;
+      title?: string;
     };
   };
 }
@@ -269,7 +343,11 @@ export interface operations {
       };
     };
     responses: {
-      201: unknown;
+      201: {
+        content: {
+          "application/json": components["schemas"]["ColumnEntity"];
+        };
+      };
     };
     requestBody: {
       content: {
@@ -280,7 +358,11 @@ export interface operations {
   ColumnsController_findAll: {
     parameters: {};
     responses: {
-      200: unknown;
+      200: {
+        content: {
+          "application/json": components["schemas"]["ColumnEntity"][];
+        };
+      };
     };
   };
   ColumnsController_findOne: {
@@ -290,7 +372,11 @@ export interface operations {
       };
     };
     responses: {
-      200: unknown;
+      200: {
+        content: {
+          "application/json": components["schemas"]["ColumnEntity"];
+        };
+      };
     };
   };
   ColumnsController_remove: {
@@ -300,7 +386,11 @@ export interface operations {
       };
     };
     responses: {
-      200: unknown;
+      200: {
+        content: {
+          "application/json": components["schemas"]["ColumnEntity"];
+        };
+      };
     };
   };
   ColumnsController_update: {
@@ -310,11 +400,178 @@ export interface operations {
       };
     };
     responses: {
-      200: unknown;
+      200: {
+        content: {
+          "application/json": components["schemas"]["ColumnEntity"];
+        };
+      };
     };
     requestBody: {
       content: {
         "application/json": components["schemas"]["UpdateColumnDto"];
+      };
+    };
+  };
+  StatusesController_findAll: {
+    parameters: {};
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["StatusEntity"][];
+        };
+      };
+    };
+  };
+  StatusesController_create: {
+    parameters: {};
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["StatusEntity"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateStatusDto"];
+      };
+    };
+  };
+  StatusesController_findOne: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["StatusEntity"];
+        };
+      };
+    };
+  };
+  StatusesController_remove: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["StatusEntity"];
+        };
+      };
+    };
+  };
+  StatusesController_update: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["StatusEntity"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateStatusDto"];
+      };
+    };
+  };
+  StatusesController_updateBatch: {
+    parameters: {};
+    responses: {
+      200: unknown;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["BatchUpdateStatusDto"];
+      };
+    };
+  };
+  GroupsController_list: {
+    parameters: {
+      path: {
+        boardId: number;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["GroupsEntity"][];
+        };
+      };
+    };
+  };
+  GroupsController_create: {
+    parameters: {
+      path: {
+        boardId: number;
+      };
+    };
+    responses: {
+      201: {
+        content: {
+          "application/json": components["schemas"]["GroupsEntity"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateGroupDto"];
+      };
+    };
+  };
+  GroupsController_retrive: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["GroupsEntity"];
+        };
+      };
+    };
+  };
+  GroupsController_remove: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["GroupsEntity"];
+        };
+      };
+    };
+  };
+  GroupsController_update: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": components["schemas"]["GroupsEntity"];
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateGroupDto"];
       };
     };
   };

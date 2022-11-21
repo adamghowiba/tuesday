@@ -13,8 +13,8 @@ export class Columns {
     return response.data;
   }
 
-  async retrive(boardId: number) {
-    const response = await this.request.get(`/columns/${boardId}`);
+  async retrive(columnId: string) {
+    const response = await this.request.get(`/columns/${columnId}`);
 
     return response;
   }
@@ -25,14 +25,14 @@ export class Columns {
     return response;
   }
 
-  async update(boardId: number, data: ColumnApi.UpdateResponse) {
-    const response = await this.request.patch(`/columns/${boardId}`, data);
+  async update(columnId: string, data: ColumnApi.UpdateResponse) {
+    const response = await this.request.patch(`/columns/${columnId}`, data);
 
     return response;
   }
 
-  async delete(boardId: number) {
-    const response = await this.request.delete(`/columns/${boardId}`);
+  async delete(columnId: string) {
+    const response = await this.request.delete(`/columns/${columnId}`);
 
     return response;
   }

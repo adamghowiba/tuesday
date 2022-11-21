@@ -4,7 +4,7 @@ import { CreateColumnDto } from '../dto/create-column.dto';
 
 export class ColumnEntity extends CreateColumnDto implements Column {
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty({ type: String })
   created_at!: Date;
